@@ -1,0 +1,5 @@
+[
+  { "name": "Chicken", "expiry": "2026-02-04" },
+  { "name": "Milk", "expiry": "2026-02-06" },
+  { "name": "Eggs", "expiry": "2026-02-10" }
+]
