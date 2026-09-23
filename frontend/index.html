@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALINA // AI Smart Fridge OS</title>
+  <meta name="description" content="ALINA is an AI-powered smart fridge character and voice assistant that tracks food expiry, reduces food waste, and recommends delicious recipes.">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❄️</text></svg>">
+</head>
+<body>
+
+  <!-- ================= LAYER 2: AMBIENT MOVING ORBS ================= -->
+  <div class="ambient-orbs-layer" aria-hidden="true">
+    <div class="ambient-orb ambient-orb-1" title="Cyan Ambient Orb"></div>
+    <div class="ambient-orb ambient-orb-2" title="Purple Ambient Orb"></div>
+    <div class="ambient-orb ambient-orb-3" title="Blue Central Ambient Orb"></div>
+    <div class="ambient-orb ambient-orb-4" title="Pink Ambient Orb"></div>
+  </div>
+
+  <!-- ================= LAYER 3: FLOATING CSS PARTICLES ================= -->
+  <div class="floating-particles-layer" id="floating-particles-layer" aria-hidden="true"></div>
+
+  <!-- ================= THREE-COLUMN APPLICATION SHELL ================= -->
+  <div class="app-root-shell">
+
+    <!-- ================= COLUMN 1: DARK GLASS SIDEBAR ================= -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div>
+        <div class="sidebar-top-brand">
+          <div class="sidebar-brand-icon">❄️</div>
+          <div class="sidebar-brand-text">
+            <h1>ALINA</h1>
+            <p>AI SMART FRIDGE OS</p>
+          </div>
+        </div>
+
+        <nav aria-label="Main Navigation">
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item active" id="nav-item-dashboard">
+              <a href="#dashboard" id="nav-link-dashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item" id="nav-item-fridge">
+              <a href="#fridge" id="nav-link-fridge">
+                <span class="nav-icon">🧊</span>
+                <span>My Fridge</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item" id="nav-item-scan">
+              <a href="#scan" id="nav-link-scan">
+                <span class="nav-icon">📷</span>
+                <span>Scan Food</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item" id="nav-item-cook">
+              <a href="#cook-spotlight-section" id="nav-link-cook">
+                <span class="nav-icon">👩‍🍳</span>
+                <span>Cook With ALINA</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item" id="nav-item-recipes">
+              <a href="#recipes" id="nav-link-recipes">
+                <span class="nav-icon">📖</span>
+                <span>Recipes</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item" id="nav-item-activity">
+              <a href="#activity" id="nav-link-activity">
+                <span class="nav-icon">⭐</span>
+                <span>Activity</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item" id="nav-item-settings">
+              <a href="#settings" id="nav-link-settings">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom-status">
+        <div class="sidebar-status-pill">
+          <span class="status-beacon"></span>
+          <span id="system-mode-badge">DEMO SIMULATION</span>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center;">
+          <span>Database</span>
+          <span style="color:var(--color-success); font-weight:700;" id="diag-db-badge">SQLITE ONLINE</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= COLUMN 2: CENTRAL ALINA DASHBOARD ================= -->
+    <main class="app-main-viewport" id="dashboard">
+
+      <!-- Greeting Hero Bar -->
+      <header class="dashboard-greeting-bar">
+        <div class="greeting-text">
+          <h2 id="hero-greeting-heading">Good afternoon! 👋</h2>
+          <p id="hero-greeting-sub">Your fridge is looking great today.</p>
+        </div>
+
+        <div class="telemetry-quick-pills">
+          <div class="glass-pill points-highlight" id="header-points-badge" title="Gamification Eco-Points">
+            🏆 100 PTS
+          </div>
+          <button class="glass-pill" id="btn-refresh-all" style="cursor: pointer; background: rgba(255,255,255,0.06);" title="Sync Telemetry">
+            <span>🔄</span> <span>Sync</span>
+          </button>
+          <button class="glass-pill" id="btn-toggle-demo-sim" style="cursor: pointer; background: rgba(255,255,255,0.06);" title="Sensor Diagnostics">
+            <span>⚙️</span> <span>Sensors</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ALINA Central Hero Robot Stage -->
+      <section class="alina-hero-stage" id="alina-stage">
+        <!-- Glowing Multi-layered Radial Aura Behind ALINA -->
+        <div class="alina-ambient-backdrop" id="alina-ambient-backdrop"></div>
+        <canvas id="particle-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 8;"></canvas>
+
+        <!-- Stage Header: Neural Presence Tag & State Pill -->
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; z-index: 10; margin-bottom: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; color: var(--color-cyan); letter-spacing: 1px;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-cyan); box-shadow: 0 0 10px var(--color-cyan);"></span>
+            ALINA NEURAL PRESENCE
+          </div>
+          <div class="alina-state-pill" id="alina-state-display" style="padding: 3px 12px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; background: rgba(34, 211, 238, 0.1); border: 1px solid var(--color-cyan); color: var(--color-cyan);">
+            IDLE
+          </div>
+        </div>
+
+        <!-- Interactive Floating Speech Bubble -->
+        <div class="alina-hero-speech-bubble" id="alina-speech-ribbon">
+          Hi! I'm ALINA. Your smart fridge friend.
+        </div>
+
+        <!-- Animated SVG Character Viewport -->
+        <div class="alina-character-box" id="alina-character-box">
+          <svg class="alina-svg state-idle alina-float-rig" id="alina-character-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Emotion State Aura Gradients -->
+              <radialGradient id="aura-cyan" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.85"/>
+                <stop offset="60%" stop-color="#2563EB" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#2563EB" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="aura-purple" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.9"/>
+                <stop offset="70%" stop-color="#7C3AED" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="aura-amber" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.9"/>
+                <stop offset="70%" stop-color="#D97706" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="aura-orange" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#F97316" stop-opacity="0.95"/>
+                <stop offset="70%" stop-color="#EA580C" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#EA580C" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="aura-red" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#EF4444" stop-opacity="0.95"/>
+                <stop offset="70%" stop-color="#DC2626" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#DC2626" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="aura-pink" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#EC4899" stop-opacity="0.9"/>
+                <stop offset="70%" stop-color="#DB2777" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#DB2777" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="aura-slate" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#64748B" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#334155" stop-opacity="0"/>
+              </radialGradient>
+
+              <!-- Chassis Gradient -->
+              <linearGradient id="chassis-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#24344D"/>
+                <stop offset="45%" stop-color="#141F33"/>
+                <stop offset="100%" stop-color="#0A101D"/>
+              </linearGradient>
+
+              <!-- Visor Screen Gradient -->
+              <linearGradient id="visor-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0F192C"/>
+                <stop offset="100%" stop-color="#050811"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Floating Core Anatomy Group -->
+            <g class="alina-floating-core" id="alina-floating-core">
+              <!-- Radiant Aura Halo -->
+              <circle class="alina-aura" id="alina-aura-circle" cx="100" cy="98" r="82" fill="url(#aura-cyan)"/>
+
+              <!-- Listening Radar Wave -->
+              <circle class="alina-pulse-ring" id="alina-pulse-ring" cx="100" cy="98" r="76" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0"/>
+
+              <!-- Floating Pedestal -->
+              <path d="M 68 152 Q 100 166 132 152 Q 100 174 68 152 Z" fill="#0D1829" stroke="rgba(34, 211, 238, 0.4)" stroke-width="1.5"/>
+              <ellipse cx="100" cy="158" rx="18" ry="3" fill="#22D3EE" opacity="0.6"/>
+
+              <!-- Outer Aerodynamic Helmet / Chassis -->
+              <rect x="36" y="34" width="128" height="120" rx="44" ry="44" fill="url(#chassis-gradient)" stroke="rgba(255, 255, 255, 0.12)" stroke-width="2"/>
+              
+              <!-- Chassis Edge Highlights -->
+              <path d="M 44 68 Q 100 24 156 68" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5"/>
+              
+              <!-- Left and Right Cute Robot Arms -->
+              <g class="alina-arm-left" id="alina-arm-left">
+                <rect x="24" y="85" width="10" height="28" rx="5" fill="#141F33" stroke="rgba(34, 211, 238, 0.4)" stroke-width="1.5"/>
+                <circle cx="29" cy="115" r="4" fill="#22D3EE" opacity="0.8"/>
+              </g>
+              <g class="alina-arm-right" id="alina-arm-right">
+                <rect x="166" y="85" width="10" height="28" rx="5" fill="#141F33" stroke="rgba(34, 211, 238, 0.4)" stroke-width="1.5"/>
+                <circle cx="171" cy="115" r="4" fill="#22D3EE" opacity="0.8"/>
+              </g>
+
+              <!-- Antenna Node & Crystal -->
+              <path d="M 100 34 L 100 18" stroke="rgba(34, 211, 238, 0.7)" stroke-width="2.5" stroke-linecap="round"/>
+              <circle class="alina-antenna-orb" id="alina-antenna-node" cx="100" cy="14" r="5" fill="#22D3EE" filter="drop-shadow(0 0 8px #22D3EE)"/>
+
+              <!-- Quantum Visor / Face Display Screen -->
+              <rect class="alina-visor" x="48" y="48" width="104" height="92" rx="30" ry="30" fill="url(#visor-gradient)"/>
+              
+              <!-- Visor Curved Glass Reflection -->
+              <path d="M 58 58 Q 100 48 142 58 A 20 20 0 0 0 134 72 Q 100 62 66 72 A 20 20 0 0 1 58 58 Z" fill="rgba(255, 255, 255, 0.04)"/>
+
+              <!-- Eyebrows (Dynamic Emotion Morphs) -->
+              <path class="alina-brow alina-brow-left" id="alina-brow-left" d="M 68 76 Q 80 72 92 75" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-linecap="round"/>
+              <path class="alina-brow alina-brow-right" id="alina-brow-right" d="M 108 75 Q 120 72 132 76" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-linecap="round"/>
+
+              <!-- Expressive Digital Eyes -->
+              <g class="alina-eye-group" id="alina-eye-group-left">
+                <ellipse class="alina-eye" id="alina-eye-left" cx="80" cy="95" rx="9" ry="14"/>
+                <circle cx="82" cy="91" r="3" fill="#FFFFFF" opacity="0.9"/>
+                <circle cx="78" cy="98" r="1.5" fill="#FFFFFF" opacity="0.6"/>
+              </g>
+
+              <g class="alina-eye-group" id="alina-eye-group-right">
+                <ellipse class="alina-eye" id="alina-eye-right" cx="120" cy="95" rx="9" ry="14"/>
+                <circle cx="122" cy="91" r="3" fill="#FFFFFF" opacity="0.9"/>
+                <circle cx="118" cy="98" r="1.5" fill="#FFFFFF" opacity="0.6"/>
+              </g>
+
+              <!-- Blushing Energy Cheeks -->
+              <ellipse class="alina-blush" id="alina-blush-left" cx="64" cy="112" rx="7" ry="4" fill="#EC4899" opacity="0.5"/>
+              <ellipse class="alina-blush" id="alina-blush-right" cx="136" cy="112" rx="7" ry="4" fill="#EC4899" opacity="0.5"/>
+
+              <!-- Animated Digital Mouth -->
+              <path class="alina-mouth-path" id="alina-mouth-path" d="M 86 126 Q 100 134 114 126" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Telemetry Glass Row -->
+        <div class="telemetry-glass-row">
+          <div class="telemetry-tile">
+            <div class="telemetry-tile-head">
+              <span>Temperature</span>
+              <span>🌡️</span>
+            </div>
+            <div class="telemetry-tile-val" id="card-temp">4.2 °C</div>
+            <div class="telemetry-tile-sub" id="card-temp-sub">Optimal preservation</div>
+          </div>
+
+          <div class="telemetry-tile">
+            <div class="telemetry-tile-head">
+              <span>Door Latch</span>
+              <span>🚪</span>
+            </div>
+            <div class="telemetry-tile-val" id="card-door">CLOSED</div>
+            <div class="telemetry-tile-sub" id="card-door-sub">Magnetic seal active</div>
+          </div>
+
+          <div class="telemetry-tile">
+            <div class="telemetry-tile-head">
+              <span>Food Items</span>
+              <span>🥗</span>
+            </div>
+            <div class="telemetry-tile-val" id="card-food-count">5 Items</div>
+            <div class="telemetry-tile-sub" id="card-expiring-sub">1 expiring soon</div>
+          </div>
+
+          <div class="telemetry-tile">
+            <div class="telemetry-tile-head">
+              <span>Smart Scale</span>
+              <span>⚖️</span>
+            </div>
+            <div class="telemetry-tile-val" id="card-weight">520 g</div>
+            <div class="telemetry-tile-sub">Load cell online</div>
+          </div>
+        </div>
+
+        <!-- Hidden counters for test suite compatibility -->
+        <span id="card-expiring-count" style="display:none;">0</span>
+        <span id="card-expired-count" style="display:none;">0</span>
+      </section>
+
+      <!-- ================= QUICK ACTION BUTTONS ================= -->
+      <section class="quick-actions-row" aria-label="Quick Actions">
+        <button class="btn-action-glass primary-add" id="btn-open-add-modal" title="Add Food to Fridge">
+          <span style="font-size: 1.25rem;">➕</span>
+          <span>Add Food</span>
+        </button>
+
+        <button class="btn-action-glass primary-scan" id="btn-open-scan-modal" title="Scan Label with OCR">
+          <span style="font-size: 1.25rem;">📷</span>
+          <span>Scan Food</span>
+        </button>
+
+        <button class="btn-action-glass" id="btn-suggest-recipe" title="Cook with ALINA Expiry Recommendation">
+          <span style="font-size: 1.25rem;">👩‍🍳</span>
+          <span>Cook With ALINA</span>
+        </button>
+
+        <button class="btn-action-glass" id="btn-listen-voice" title="Talk to ALINA Voice Assistant">
+          <span style="font-size: 1.25rem;">🎙️</span>
+          <span>Talk to ALINA</span>
+        </button>
+      </section>
+
+      <!-- ================= EXPIRING SOON SPOTLIGHT CARD ================= -->
+      <section class="spotlight-expiring-card" id="cook-spotlight-section">
+        <div class="spotlight-content-side">
+          <div class="spotlight-icon-frame" id="cook-spotlight-icon">
+            🍗
+          </div>
+          <div class="spotlight-text">
+            <div style="font-size: 0.72rem; font-weight: 800; color: var(--color-warning); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">
+              ⚠️ EXPIRING SOON
+            </div>
+            <h3 id="cook-title">Recommended Dish: Chicken Rice</h3>
+            <p id="cook-reason">Chicken expires tomorrow • 1 DAY LEFT • HIGH PRIORITY</p>
+          </div>
+        </div>
+        <div class="spotlight-actions">
+          <button class="btn-cook-spotlight" id="btn-cook-now" title="Cook recommended recipe">
+            👨‍🍳 Cook Now
+          </button>
+          <button class="btn-action-glass" id="btn-show-recipes" style="padding: 0.7rem 1.1rem; font-size: 0.82rem;" title="Explore other recipes">
+            📖 Recipes
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= MY FRIDGE INVENTORY ================= -->
+      <section class="my-fridge-container" id="fridge">
+        <div class="fridge-section-header">
+          <h2>
+            <span>🧊</span> My Fridge Inventory
+          </h2>
+          <div class="filter-glass-group">
+            <button class="filter-tab active filter-btn" data-filter="active">Active Groceries</button>
+            <button class="filter-tab filter-btn" data-filter="consumed">Consumed</button>
+            <button class="filter-tab filter-btn" data-filter="all">All Items</button>
+          </div>
+        </div>
+
+        <!-- Hidden select for programmatic sync -->
+        <select id="inventory-filter" style="display: none;">
+          <option value="active" selected>Active Food</option>
+          <option value="consumed">Consumed</option>
+          <option value="all">All History</option>
+        </select>
+
+        <!-- Dynamic Food Inventory Grid -->
+        <div class="food-inventory-grid" id="food-cards-grid"></div>
+
+        <!-- Hidden table tbody for test suite sync -->
+        <table style="display: none;"><tbody id="inventory-tbody"></tbody></table>
+
+        <!-- Empty Inventory State -->
+        <div id="empty-inventory" class="empty-inventory-box" style="display: none; padding: 2.5rem 1.5rem; text-align: center; border: 1px dashed rgba(255,255,255,0.15); border-radius: var(--glass-radius-sm); flex-direction: column; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 2.5rem;">🥗</span>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Your fridge is currently empty. Add groceries to begin smart shelf-life tracking.</p>
+          <button class="btn-action-glass primary-add" onclick="document.getElementById('btn-open-add-modal').click()" style="margin-top: 0.5rem;">
+            ➕ Add Groceries
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= DIAGNOSTICS & SYSTEM DRAWER ================= -->
+      <section class="my-fridge-container diagnostics-drawer" id="simulation-panel" style="margin-top: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+            ⚙️ IoT Hardware Diagnostics & Sensor Simulator
+          </h3>
+          <span style="font-size: 0.75rem; color: var(--color-cyan); font-family: 'JetBrains Mono', monospace;">SIMULATION CONTROLS</span>
+        </div>
+
+        <div class="diag-grid">
+          <div class="diag-item"><span class="diag-label">SQLite DB:</span><span class="diag-val ONLINE" id="diag-db">ONLINE</span></div>
+          <div class="diag-item"><span class="diag-label">Webcam:</span><span class="diag-val" id="diag-cam">CHECKING...</span></div>
+          <div class="diag-item"><span class="diag-label">Microphone:</span><span class="diag-val" id="diag-mic">CHECKING...</span></div>
+          <div class="diag-item"><span class="diag-label">Speaker:</span><span class="diag-val" id="diag-spk">CHECKING...</span></div>
+          <div class="diag-item"><span class="diag-label">Tesseract:</span><span class="diag-val" id="diag-ocr">CHECKING...</span></div>
+          <div class="diag-item"><span class="diag-label">ESP32:</span><span class="diag-val" id="diag-esp">CHECKING...</span></div>
+          <div class="diag-item"><span class="diag-label">AI Model:</span><span class="diag-val" id="diag-ai">LOCAL</span></div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem;">
+          <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Simulate Triggers:</span>
+          <button class="btn-action-glass" id="btn-sim-door-open" style="padding: 0.4rem 0.8rem; font-size: 0.78rem;">🚪 Open Door (15s Alarm)</button>
+          <button class="btn-action-glass" id="btn-sim-door-close" style="padding: 0.4rem 0.8rem; font-size: 0.78rem;">🔒 Close Door</button>
+          <button class="btn-action-glass" id="btn-sim-weight-drop" style="padding: 0.4rem 0.8rem; font-size: 0.78rem;">⚖️ Scale -400g Drop</button>
+          <button class="btn-action-glass" id="btn-sim-weight-reset" style="padding: 0.4rem 0.8rem; font-size: 0.78rem;">⚖️ Reset Scale (520g)</button>
+          <button class="btn-action-glass" id="btn-test-buzzer" style="padding: 0.4rem 0.8rem; font-size: 0.78rem;">📢 Test Buzzer</button>
+          <button class="btn-action-glass" id="btn-test-servo" style="padding: 0.4rem 0.8rem; font-size: 0.78rem;">⚡ Test Latch</button>
+        </div>
+
+        <!-- System Events Stream -->
+        <div style="max-height: 120px; overflow-y: auto; background: rgba(5, 11, 36, 0.8); border-radius: var(--glass-radius-sm); padding: 0.65rem 0.85rem; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); border: 1px solid rgba(255, 255, 255, 0.06);">
+          <ul id="events-list" style="list-style: none; display: flex; flex-direction: column; gap: 4px;"></ul>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= COLUMN 3: GLASS CONVERSATION PANEL ================= -->
+    <aside class="app-chat-sidebar" id="chat-sidebar">
+      <div class="chat-glass-header">
+        <div class="chat-title-presence">
+          <div class="chat-robot-avatar">🤖</div>
+          <div>
+            <h3>ALINA</h3>
+            <div class="chat-presence-tag">
+              <span class="status-beacon"></span>
+              <span>Online</span>
+            </div>
+          </div>
+        </div>
+        <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--text-secondary); cursor: pointer;">
+          <input type="checkbox" id="toggle-speech-audio" checked style="accent-color: var(--color-cyan);"> Voice
+        </label>
+      </div>
+
+      <!-- Chat Messages Stream -->
+      <div class="chat-scroll-stream" id="chat-history">
+        <!-- Initial Welcome Message -->
+        <div class="chat-bubble-unit alina">
+          <div class="unit-avatar alina">❄️</div>
+          <div>
+            <div class="bubble-text-frame">
+              Hi! I'm ALINA, your smart fridge friend. I monitor freshness, suggest delicious recipes before food expires, and reward you for zero food waste!
+            </div>
+            <div class="bubble-timestamp">ALINA • JUST NOW</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggested Prompt Chips -->
+      <div class="chat-chips-scroller">
+        <button class="chip-btn suggestion-chip" data-query="What expires soon?">⏰ Expiring soon</button>
+        <button class="chip-btn suggestion-chip" data-query="What should I cook today?">👩‍🍳 Cook today</button>
+        <button class="chip-btn suggestion-chip" data-query="Show fridge items">📦 All items</button>
+        <button class="chip-btn suggestion-chip" data-query="How many points do I have?">🏆 Points</button>
+        <button class="chip-btn suggestion-chip" data-query="What is the temperature?">🌡️ Temp</button>
+      </div>
+
+      <!-- Bottom Chat Input Bar -->
+      <form id="chat-form" class="chat-bottom-input-bar">
+        <button type="button" class="btn-mic-trigger" id="btn-mic-chat" title="Click to speak (Microphone)">
+          🎙️
+        </button>
+        <input type="text" id="chat-input-text" class="chat-input-field" placeholder="Ask ALINA anything..." autocomplete="off">
+        <button type="submit" class="btn-action-glass primary-add" style="padding: 0.65rem 1.1rem; font-size: 0.85rem; height: 42px;">
+          Send
+        </button>
+      </form>
+    </aside>
+
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal: Add Food Manually -->
+  <div class="modal-backdrop" id="modal-add-food">
+    <div class="modal-content-cyber">
+      <div class="modal-header-cyber">
+        <h3>➕ Add Groceries to Fridge</h3>
+        <button class="btn-close-modal" id="btn-close-add-modal">✕</button>
+      </div>
+      <form id="form-add-food">
+        <div class="modal-body-cyber">
+          <div class="form-group-cyber">
+            <label>Food Item Name *</label>
+            <input type="text" id="add-food-name" class="form-input-cyber" placeholder="e.g. Fresh Milk, Chicken Breast, Eggs" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+            <div class="form-group-cyber">
+              <label>Quantity</label>
+              <input type="number" step="0.1" id="add-food-qty" class="form-input-cyber" value="1.0" required>
+            </div>
+            <div class="form-group-cyber">
+              <label>Unit</label>
+              <select id="add-food-unit" class="form-input-cyber">
+                <option value="pieces">pieces</option>
+                <option value="grams">grams</option>
+                <option value="kg">kg</option>
+                <option value="litre">litre</option>
+                <option value="ml">ml</option>
+                <option value="slices">slices</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group-cyber">
+            <label>Expiry Date (YYYY-MM-DD) *</label>
+            <input type="date" id="add-food-expiry" class="form-input-cyber" required>
+          </div>
+          <div class="form-group-cyber">
+            <label>Category</label>
+            <select id="add-food-category" class="form-input-cyber">
+              <option value="General">General</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Meat">Meat</option>
+              <option value="Poultry">Poultry</option>
+              <option value="Produce">Produce / Vegetables</option>
+              <option value="Fruits">Fruits</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Grains">Grains</option>
+              <option value="Seafood">Seafood</option>
+            </select>
+          </div>
+          <div class="form-group-cyber">
+            <label>Scale Weight in Grams (Optional)</label>
+            <input type="number" id="add-food-weight" class="form-input-cyber" placeholder="e.g. 500">
+          </div>
+        </div>
+        <div class="modal-footer-cyber">
+          <button type="button" class="btn-action-glass" id="btn-cancel-add">Cancel</button>
+          <button type="submit" class="btn-action-glass primary-add">Save to Fridge</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Scan Food with Laser OCR -->
+  <div class="modal-backdrop" id="modal-scan-food">
+    <div class="modal-content-cyber">
+      <div class="modal-header-cyber">
+        <h3>📷 Laser Optical Packaging Scanner</h3>
+        <button class="btn-close-modal" id="btn-close-scan-modal">✕</button>
+      </div>
+      <form id="form-scan-save">
+        <div class="modal-body-cyber">
+          <div class="scanner-viewport">
+            <div class="scanner-reticle-corners"></div>
+            <div class="scanner-laser-line" id="scanner-laser"></div>
+            
+            <div id="scan-loading-spinner" style="display: none; text-align: center; color: var(--color-cyan); z-index: 5;">
+              <div style="font-size: 2.2rem; animation: micRingPulse 1s infinite;">⚡</div>
+              <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; margin-top: 0.5rem; letter-spacing: 1px;">ANALYZING PACKAGING MATRIX...</p>
+            </div>
+            
+            <div id="scan-idle-state" style="text-align: center; z-index: 5;">
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.85rem;">
+                Align product label or expiry stamp within reticle
+              </p>
+              <button type="button" class="btn-action-glass primary-scan" id="btn-trigger-capture">
+                📸 Trigger Optical Capture
+              </button>
+            </div>
+          </div>
+
+          <div id="scan-status-box" style="display: none; padding: 0.75rem 1rem; border-radius: var(--glass-radius-sm); font-size: 0.82rem; background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.35); color: var(--color-cyan);"></div>
+
+          <p style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.75px; margin-top: 0.5rem;">
+            Extracted Optical Details:
+          </p>
+
+          <div class="form-group-cyber">
+            <label>Identified Food *</label>
+            <input type="text" id="scan-food-name" class="form-input-cyber" placeholder="e.g. Chicken" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+            <div class="form-group-cyber">
+              <label>Quantity</label>
+              <input type="number" step="0.1" id="scan-food-qty" class="form-input-cyber" value="1.0" required>
+            </div>
+            <div class="form-group-cyber">
+              <label>Unit</label>
+              <input type="text" id="scan-food-unit" class="form-input-cyber" value="pieces">
+            </div>
+          </div>
+          <div class="form-group-cyber">
+            <label>Parsed Expiry Date (YYYY-MM-DD) *</label>
+            <input type="date" id="scan-food-expiry" class="form-input-cyber" required>
+          </div>
+          <div class="form-group-cyber">
+            <label>Raw OCR Optical Buffer</label>
+            <textarea id="scan-raw-text" class="form-input-cyber" rows="2" readonly style="font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; opacity: 0.7;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer-cyber">
+          <button type="button" class="btn-action-glass" id="btn-cancel-scan">Cancel</button>
+          <button type="submit" class="btn-action-glass primary-scan" id="btn-save-scanned-food">💾 Confirm & Store</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Consumption Confirmation Prompt -->
+  <div class="modal-backdrop" id="modal-consumption-confirm">
+    <div class="modal-content-cyber" style="max-width: 460px;">
+      <div class="modal-header-cyber">
+        <h3>⚖️ Scale Weight Drop Detected</h3>
+      </div>
+      <div class="modal-body-cyber">
+        <p id="consumption-prompt-text" style="font-size: 1.05rem; font-weight: 600; color: #FFFFFF;"></p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
+          Confirming consumption updates your active inventory and awards you <strong style="color: #FEF08A;">+10 sustainability points</strong>!
+        </p>
+      </div>
+      <div class="modal-footer-cyber">
+        <button type="button" class="btn-action-glass" id="btn-consumption-no">No, Kept in Fridge</button>
+        <button type="button" class="btn-action-glass primary-add" id="btn-consumption-yes">Yes, Consumed! 🎉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
